@@ -2,20 +2,21 @@ package main
 
 import (
 	"fmt"
+	infra_database "golang/projects/go-hexagonal/infra/database"
+	infra_secrets "golang/projects/go-hexagonal/infra/secrets"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
 )
 
-func main() {
+func init() {
+	infra_secrets.LoadEnv()
+	infra_database.LoadDatabase()
+}
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+func main() {
 
 	router := mux.NewRouter()
 
@@ -25,7 +26,8 @@ func main() {
 	port := os.Getenv("PORT")
 
 	fmt.Println("Server is running on port", port)
-	err = http.ListenAndServe(fmt.Sprintf(":%v", port), router)
+	err := http.ListenAndServe(fmt.Sprintf(":%v", port), router)
+
 	if err != nil {
 		log.Fatal(err)
 	}

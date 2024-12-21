@@ -1,1 +1,1 @@
-https://www.youtube.com/watch?v=RHa4D6aNVpg&list=PL3eAkoh7fypqUQUQPn-bXtfiYT_ZSVKmB&index=2&ab_channel=PragmaticReviews
+https://www.youtube.com/watch?v=Yg_ae0UvCv4&list=PL3eAkoh7fypqUQUQPn-bXtfiYT_ZSVKmB&index=3&ab_channel=PragmaticReviews

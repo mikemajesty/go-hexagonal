@@ -2,26 +2,22 @@ package main
 
 import (
 	"encoding/json"
+	"golang/projects/go-hexagonal/entities"
+	repository "golang/projects/go-hexagonal/repositories"
 	"net/http"
 )
 
-type Post struct {
-	Id    int    `json:"id"`
-	Title string `json:"title"`
-	Text  string `json:"text"`
-}
-
-var posts []Post
-
-func init() {
-	posts = []Post{
-		{Id: 1, Title: "Title 1", Text: "Text 1"},
-		{Id: 2, Title: "Title 2", Text: "Text 2"},
-	}
-}
+var PostRepository repository.IPostRepository = repository.Create()
 
 func getPost(response http.ResponseWriter, _ *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
+	posts, err := PostRepository.FindAllPosts()
+
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{"error": "Error getting the posts"}`))
+		return
+	}
 	result, err := json.Marshal(posts)
 
 	if err != nil {
@@ -36,7 +32,7 @@ func getPost(response http.ResponseWriter, _ *http.Request) {
 
 func addPost(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
-	var post Post
+	var post entities.Post
 	err := json.NewDecoder(request.Body).Decode(&post)
 
 	if err != nil {
@@ -45,8 +41,19 @@ func addPost(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	post.Id = len(posts) + 1
-	posts = append(posts, post)
+	posts, err := PostRepository.FindAllPosts()
+
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{"error": "Error getting the posts"}`))
+		return
+	}
+
+	var id uint = uint(len(posts)) + 1
+
+	post.ID = id
+
+	PostRepository.SavePost(&post)
 
 	result, err := json.Marshal(post)
 
