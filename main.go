@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"golang/projects/go-hexagonal/controllers"
 	infra_database "golang/projects/go-hexagonal/infra/database"
 	infra_secrets "golang/projects/go-hexagonal/infra/secrets"
 	"log"
@@ -20,8 +21,8 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/posts", getPost).Methods("GET")
-	router.HandleFunc("/posts", addPost).Methods("POST")
+	router.HandleFunc("/posts", controllers.GetPost).Methods("GET")
+	router.HandleFunc("/posts", controllers.AddPost).Methods("POST")
 
 	port := os.Getenv("PORT")
 
